@@ -1190,7 +1190,11 @@ private fun deleteCachedSharedVideoInternal(cacheId: String): Boolean {
                 // Subframe navigations must never replace the trusted top-level URL snapshot.
                 // Otherwise a cross-origin video iframe would revoke the bridge for the real app page.
                 if (!request.isForMainFrame) return false
-                trustedShellUrl = url.toString()
+                // External links are handed to Android and never become the WebView's main page.
+                // Do not overwrite the trusted top-level URL snapshot for those requests:
+                // otherwise every subsequent nonce-gated bridge call (including DOCX export)
+                // fails with "Untrusted native bridge caller" until the page reloads.
+                if (isTrustedShellOrigin(url.toString())) trustedShellUrl = url.toString()
                 val scheme = url.scheme ?: return false
                 // 站内导航留在壳里；顶层 http(s) 外链和自定义协议交给系统
                 if (scheme == "http" || scheme == "https") {
