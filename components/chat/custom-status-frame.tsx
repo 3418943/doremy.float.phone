@@ -67,7 +67,9 @@ export function CustomStatusFrame({ html, raw, kind = "status", title = "自定�
             if (!data || data.source !== "chat-status-frame" || data.type !== "resize" || data.id !== frameId) return;
             if (data.type === "resize") {
                 const next = Number(data.height);
-                if (Number.isFinite(next)) setHeight(Math.min(Math.max(next, FRAME_MIN_HEIGHT), FRAME_MAX_HEIGHT));
+                // 万字番外的 iframe 允许更高，避免正文被 5000px 高度限制裁掉。
+                const maxHeight = kind === "theater" ? 40000 : FRAME_MAX_HEIGHT;
+                if (Number.isFinite(next)) setHeight(Math.min(Math.max(next, FRAME_MIN_HEIGHT), maxHeight));
             }
         };
         window.addEventListener("message", handleMessage);
