@@ -59,7 +59,10 @@ function StoryFoldBlock({ label, content, scopeClass, children }: {
     const [viewMode, setViewMode] = useState<"both" | "zh" | "orig">("both");
     // 折叠内容懒挂载：收起状态下 iframe 宽度为 0，高度桥会测出垃圾值并触发
     // vh 反馈环高度锁（表现为展开后一大段空白）。展开后才渲染内容即可避免。
-    const [hasOpened, setHasOpened] = useState(false);
+    // 小剧场自动展开并立刻挂载卡片；其它折叠标签仍保持默认收起。
+    const isTheater = label === "小剧场" || label.toLowerCase() === "story_theater";
+    const [expanded, setExpanded] = useState(isTheater);
+    const [hasOpened, setHasOpened] = useState(isTheater);
     const handleTranslate = async (e: { preventDefault(): void; stopPropagation(): void }) => {
         e.preventDefault();
         e.stopPropagation();
@@ -85,7 +88,12 @@ function StoryFoldBlock({ label, content, scopeClass, children }: {
         <details
             className="story-fold-block"
             data-fold-tag={label}
-            onToggle={(e) => { if (e.currentTarget.open) setHasOpened(true); }}
+            open={expanded}
+            onToggle={(e) => {
+                const open = e.currentTarget.open;
+                setExpanded(open);
+                if (open) setHasOpened(true);
+            }}
         >
             <summary>
                 {label}
