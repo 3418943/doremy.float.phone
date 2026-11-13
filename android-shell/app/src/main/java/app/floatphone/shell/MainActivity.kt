@@ -2021,7 +2021,7 @@ private fun deleteCachedSharedVideoInternal(cacheId: String): Boolean {
             val icon = loadAvatarBitmap(avatarUrl)
             val builder = NotificationCompat.Builder(this@MainActivity, CH_MESSAGES)
                 .setSmallIcon(R.drawable.ic_stat)
-                .setContentTitle(title.ifBlank { "小手机" })
+                .setContentTitle(title.ifBlank { this@MainActivity.getString(R.string.app_name) })
                 .setContentText(body)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(body))
                 .setAutoCancel(true)
