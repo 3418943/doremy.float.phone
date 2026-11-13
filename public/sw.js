@@ -87,7 +87,7 @@ self.addEventListener("push", (event) => {
   const notificationData = declarative && declarative.data && typeof declarative.data === "object"
     ? declarative.data
     : data;
-  const title = (declarative && declarative.title) || data.title || "小手机";
+  const title = (declarative && declarative.title) || data.title || "anther";
   event.waitUntil((async () => {
     if (notificationData.type === "chat_outbox") {
       const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
